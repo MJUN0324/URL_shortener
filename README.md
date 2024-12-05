@@ -1,4 +1,5 @@
 # URL_shortener
+
 ![url_shortner](https://github.com/user-attachments/assets/c66d5c78-0418-45ea-affa-9b1f2daa4928)
 
 ## Architecture
@@ -9,10 +10,12 @@
 
 ---
 
-## Website URL 
-[URL Shortner]()
+## Website URL
+
+URL Shortner: [dsfsadf]()
 
 ---
+
 ## Prerequisites
 
 Ensure you have the following tools installed:
@@ -30,8 +33,8 @@ Ensure you have the following tools installed:
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/your-repo-name/project.git
-cd project
+git clone https://github.com/MegazoneCloud-HKG-Hiring/assignment-jun-miyajima.git
+cd assignment-jun-miyajima
 ```
 
 ## AWS SAM Template
@@ -41,7 +44,7 @@ cd project
 Navigate to the aws directory
 
 ```bash
-cd backend
+cd aws
 ```
 
 Build the SAM template
@@ -77,33 +80,20 @@ npm install
 ```bash
 npm run build
 ```
+
 This will create a build folder containing the production-ready files to copy to S3 bucket
 
 ### 4. Deploy the Frontend
 
-**Option 1: Command Line**
+**AWS Console**
 
-1. Configure an S3 bucket
-```bash
-aws s3 mb s3://your-bucket-name
-```
-
-2. Deploy the frontend build:
-```bash
-aws s3 mb s3://your-bucket-name
-```
-
-3. Enable static website hosting:
-```bash
-aws s3 website s3://your-bucket-name --index-document index.html --error-document error.html
-```
-**Option 2: AWS Console**
 1. Navigate to your S3 bucket created in backend section
 2. Upload the build folders' files to the S3 bucket
 3. Click Actions button
 4. Click Make public using ACL
 
 ## Environment Variables
+
 Ensure the following environment variables are set for local development and deployment:
 | Variable Name | Description |
 | ------------- | ----------- |
@@ -112,12 +102,15 @@ Ensure the following environment variables are set for local development and dep
 Set them in a `.env` file (for local use)
 
 ## Cost Estimate
-| Service       | Estimated Monthly Cost (USD) |
-| ------------- | ---------------------------- |
-| AWS Lambda    | $2.00                        |
-| API Gateway   | $3.50                        |
-| Amazon S3     | $5.60                        |
-| DynamoDB      | $15.00                       |
-| **Total**     | **$26.10**                   |
+
+| Service     | Estimated Monthly Cost (USD) |
+| ----------- | ---------------------------- |
+| AWS Lambda  | $0.00                        |
+| API Gateway | $1.00                        |
+| Amazon S3   | $2.24                        |
+| DynamoDB    | $0.82                        |
+| **Total**   | **$4.06**                    |
+
+My Estimate: [Download PDF](https://github.com/user-attachments/files/18025902/8adba10c-1ee5-4929-8b69-eb5819102970.pdf), [link](https://calculator.aws/#/estimate?id=a5a8f9c5812dfbbdf0ab2857da1627ce00674cbe)
 
 For more accurate estimate, please use the [AWS Pricing Calculator](https://calculator.aws/#/).
