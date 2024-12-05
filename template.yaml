@@ -1,0 +1,217 @@
+Transform: AWS::Serverless-2016-10-31
+Parameters:
+  stageName:
+    Type: String
+    Default: dev
+    Description: The stage name of the application.
+
+Resources:
+  createurl:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: !Sub
+        - Stack ${AWS::StackName} Function ${ResourceName}
+        - ResourceName: createurl
+      CodeUri: src/createurl
+      Handler: createurl.handler
+      Runtime: python3.9
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Architectures:
+        - arm64
+      Events:
+        urlshortnerserverPOSTcreateurl:
+          Type: HttpApi
+          Properties:
+            Path: /createurl
+            Method: POST
+            ApiId: !Ref urlshortnerserverapi
+      Environment:
+        Variables:
+          URLSHORTNERTABLE_TABLE_NAME: !Ref urlshortnertable
+          URLSHORTNERTABLE_TABLE_ARN: !GetAtt urlshortnertable.Arn
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref urlshortnertable
+
+  createurlLogGroup:
+    Type: AWS::Logs::LogGroup
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${createurl}
+
+  urlshortnerserverapi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      Name: !Sub
+        - ${ResourceName} From Stack ${AWS::StackName}
+        - ResourceName: Api
+      StageName: !Ref stageName
+      CorsConfiguration:
+        AllowMethods:
+          - POST
+          - GET
+          - OPTIONS
+          - DELETE
+        AllowHeaders:
+          - Content-Type
+        AllowOrigins:
+          - "*"
+
+  urlshortnertable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+        - AttributeName: shortCode
+          AttributeType: S
+      BillingMode: PAY_PER_REQUEST
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: url_index
+          KeySchema:
+            - AttributeName: shortCode
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+      TimeToLiveSpecification:
+        AttributeName: expiredAt
+        Enabled: true
+      StreamSpecification:
+        StreamViewType: NEW_AND_OLD_IMAGES
+
+  geturls:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: !Sub
+        - Stack ${AWS::StackName} Function ${ResourceName}
+        - ResourceName: geturls
+      CodeUri: src/geturls
+      Handler: geturls.handler
+      Runtime: python3.9
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Environment:
+        Variables:
+          URLSHORTNERTABLE_TABLE_NAME: !Ref urlshortnertable
+          URLSHORTNERTABLE_TABLE_ARN: !GetAtt urlshortnertable.Arn
+      Architectures:
+        - arm64
+      Events:
+        urlshortnerserverGETgeturls:
+          Type: HttpApi
+          Properties:
+            Path: /geturls
+            Method: GET
+            ApiId: !Ref urlshortnerserverapi
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref urlshortnertable
+
+  geturlsLogGroup:
+    Type: AWS::Logs::LogGroup
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${geturls}
+
+  deleteurl:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: !Sub
+        - Stack ${AWS::StackName} Function ${ResourceName}
+        - ResourceName: deleteurl
+      CodeUri: src/deleteurl
+      Handler: deleteurl.handler
+      Runtime: python3.9
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Architectures:
+        - arm64
+      Environment:
+        Variables:
+          URLSHORTNERTABLE_TABLE_NAME: !Ref urlshortnertable
+          URLSHORTNERTABLE_TABLE_ARN: !GetAtt urlshortnertable.Arn
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref urlshortnertable
+      Events:
+        urlshortnerserverDELETEdeleteurlid:
+          Type: HttpApi
+          Properties:
+            Path: /deleteurl/{id}
+            Method: DELETE
+            ApiId: !Ref urlshortnerserverapi
+
+  deleteurlLogGroup:
+    Type: AWS::Logs::LogGroup
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${deleteurl}
+  redirect:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: !Sub
+        - Stack ${AWS::StackName} Function ${ResourceName}
+        - ResourceName: redirect
+      CodeUri: src/redirect
+      Handler: redirect.handler
+      Runtime: python3.9
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Architectures:
+        - arm64
+      Events:
+        urlshortGETredirect:
+          Type: HttpApi
+          Properties:
+            Path: /{shortCode}
+            Method: GET
+            ApiId: !Ref urlshortnerserverapi
+      Environment:
+        Variables:
+          URLSHORTNERTABLE_TABLE_NAME: !Ref urlshortnertable
+          URLSHORTNERTABLE_TABLE_ARN: !GetAtt urlshortnertable.Arn
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref urlshortnertable
+  redirectLogGroup:
+    Type: AWS::Logs::LogGroup
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${redirect}
+
+  urlshortnerBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub ${AWS::StackName}-urlshortn-${AWS::AccountId}
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerPreferred
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+      WebsiteConfiguration:
+        IndexDocument: index.html
+
+Outputs:
+  ApiGatewayBaseUrl:
+    Description: API Gateway base URL
+    Value: !Sub https://${urlshortnerserverapi}.execute-api.${AWS::Region}.amazonaws.com/${stageName}/
+  DynamoDBTableName:
+    Description: URL Shortner Table Name
+    Value: !Ref urlshortnertable
+  FrontendWebSiteBucket:
+    Value: !Ref urlshortnerBucket
+    Description: Website hosted bucket name
+  PublicWebSiteURL:
+    Value: !GetAtt urlshortnerBucket.WebsiteURL
+    Description: URL for website hosted on S3
