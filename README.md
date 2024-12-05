@@ -1,7 +1,11 @@
 # URL_shortener
+![url_shortner](https://github.com/user-attachments/assets/c66d5c78-0418-45ea-affa-9b1f2daa4928)
 
 ## Architecture
-![URLShortner_Architecture drawio](https://github.com/user-attachments/assets/36c24a77-e178-4187-975e-6a4b541603a1)
+
+[comment]: <![URLShortner_Architecture drawio](https://github.com/user-attachments/assets/36c24a77-e178-4187-975e-6a4b541603a1)>
+
+<p align="center"><img src="https://github.com/user-attachments/assets/36c24a77-e178-4187-975e-6a4b541603a1"</p>
 
 ---
 
