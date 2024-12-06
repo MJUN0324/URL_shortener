@@ -102,14 +102,14 @@ Ensure the following environment variables are set for local development and dep
 Set them in a `.env` file (for local use)
 
 ## Cost Estimate
-
-| Service     | Estimated Monthly Cost (USD) |
-| ----------- | ---------------------------- |
-| AWS Lambda  | $0.00                        |
-| API Gateway | $1.00                        |
-| Amazon S3   | $2.24                        |
-| DynamoDB    | $0.82                        |
-| **Total**   | **$4.06**                    |
+Excluding free tier quota
+| Service     | Description                                 | Estimated Monthly Cost (USD) | 
+| ----------- | ------------------------------------------- | ---------------------------- | 
+| AWS Lambda  | per 1 million requests (ARM architecture)   | $0.20                        |
+| API Gateway | per 1 million requests, Data Transfer per GB| $1.00 + $0.09                |
+| Amazon S3   | Storage per GB, Data Transfer per GB        | $0.023 + $0.09               |
+| DynamoDB    | per 1 WCU and 1 RCU, per GB storage         | $1.25 + $0.25                | 
+| **Total**   |                                             |**$2.903**                    | 
 
 My Estimate: [Download PDF](https://github.com/user-attachments/files/18025902/8adba10c-1ee5-4929-8b69-eb5819102970.pdf), [link](https://calculator.aws/#/estimate?id=a5a8f9c5812dfbbdf0ab2857da1627ce00674cbe)
 
