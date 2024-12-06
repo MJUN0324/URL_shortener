@@ -114,3 +114,6 @@ Set them in a `.env` file (for local use)
 My Estimate: [Download PDF](https://github.com/user-attachments/files/18025902/8adba10c-1ee5-4929-8b69-eb5819102970.pdf), [link](https://calculator.aws/#/estimate?id=a5a8f9c5812dfbbdf0ab2857da1627ce00674cbe)
 
 For more accurate estimate, please use the [AWS Pricing Calculator](https://calculator.aws/#/).
+
+## License
+This project is licensed under the MIT License - see the `LICENSE` file for details.
