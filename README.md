@@ -12,7 +12,7 @@
 
 ## Website URL
 
-URL Shortner: [dsfsadf]()
+URL Shortner: [https://shorturlapi-urlshortn-364405424984.s3.us-east-1.amazonaws.com/index.html](https://shorturlapi-urlshortn-364405424984.s3.us-east-1.amazonaws.com/index.html)
 
 ---
 
@@ -58,7 +58,7 @@ sam build
 To deploy the backend to AWS, run:
 
 ```bash
-sam deploy --guided
+sam deploy --guided --capabilities CAPABILITY_NAMED_IAM
 ```
 
 ## Frontend: Build and Deploy
